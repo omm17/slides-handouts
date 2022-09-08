@@ -1,7 +1,7 @@
 public final class ArrayBag<T> implements BagInterface<T> {
 
   public ArrayBag(){
-    //TODO
+    this(DEFAULT_CONSTRUCTOR);
   }
 
   public ArrayBag(int initialCapacity){
@@ -18,7 +18,13 @@ public final class ArrayBag<T> implements BagInterface<T> {
     * @return true if adding was sucessful, or false otherwise
     */
     public boolean add(T item) {
-      return false;
+      boolean result = false;
+      if (bag.length > numberOfItems){ // checks if array has room for items
+        bag[numberOfItems] = item; // if so, adds item to array and increases item count
+        numberOfItems++;
+        result = true;
+      }
+      return result; // returns based on whether items were added or not
     }
   
 
@@ -57,7 +63,9 @@ public final class ArrayBag<T> implements BagInterface<T> {
   }
 
   public T[] toArray(){
-   return null;
+    T[] result = (T[]) new Object[numberOfItems]; // creates temporary array for security purposes // fill based on logical size, not physical size
+    for(int i=0; i<numberOfItems; i++){
+      result[i] =bag[i]; // creates a shallow copy of every item in the bag
   }
 
   public boolean contains(T item){
