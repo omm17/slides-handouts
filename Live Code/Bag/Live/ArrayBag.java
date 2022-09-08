@@ -18,8 +18,9 @@ public final class ArrayBag<T> implements BagInterface<T> {
     * @return true if adding was sucessful, or false otherwise
     */
     public boolean add(T item) {
+      checkIntegrity();
       boolean result = false;
-      if (bag.length > numberOfItems){ // checks if array has room for items
+      if (isFull()){ // checks if array has room for items // this. is implied because code is within the class
         bag[numberOfItems] = item; // if so, adds item to array and increases item count
         numberOfItems++;
         result = true;
@@ -44,15 +45,15 @@ public final class ArrayBag<T> implements BagInterface<T> {
 
 
   public int size(){
-    return 0;
+    return numberOfItems;
   }
 
   public boolean isEmpty(){
-    return false;
+    return numberOfItems == 0; //true when items is 0, false otherwise
   }
 
   public boolean isFull() {
-    return false;
+    return numberOfItems >= bag.length;
   }
 
   public int getFrequencyOf(T item) {
@@ -60,9 +61,12 @@ public final class ArrayBag<T> implements BagInterface<T> {
   }
 
   public void clear(){
+    while(!isEmpty){
+      remove();
   }
 
   public T[] toArray(){
+    checkIntegrity();
     T[] result = (T[]) new Object[numberOfItems]; // creates temporary array for security purposes // fill based on logical size, not physical size
     for(int i=0; i<numberOfItems; i++){
       result[i] =bag[i]; // creates a shallow copy of every item in the bag
@@ -88,11 +92,13 @@ public BagInterface<T> difference(BagInterface<T> anotherBag){
 }
 
   private void checkCapacity(int capacity){
-    
+    if(capacity > MAX_CAPACITY){
+      throw new IllegalStateException(s: "Allocation size exceeds size limit of ArrayBag object")
   }
 
   private void checkIntegrity(){
-    
+    if(!initialized){
+      throw new SecurityException(s: "Trying to operate on a non-initialized ArrayBag object")
   }
 
   private int indexOf(T item){
